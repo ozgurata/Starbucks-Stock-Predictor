@@ -24,8 +24,7 @@ The goal of this project is to predict the **closing stock price** of Starbucks 
 
 ## Project Structure
 - **data/**: Folder for storing the stock data CSV file.
-- **notebooks/**: Jupyter notebooks for initial analysis and experiments.
-- **app.py**: Main Streamlit app script.
+- **StarbucksPredictor.py**: Main Streamlit app script.
 - **best_model.pkl**: Serialized best model for deployment.
 - **README.md**: This README file.
 - **LICENSE**: Project license.
@@ -37,9 +36,10 @@ This project follows a step-by-step approach to build, evaluate, and deploy a pr
 2. **Exploratory Data Analysis**: Visualize the target variable and perform basic EDA.
 3. **Outlier Analysis**: Identify and treat outliers in the data.
 4. **Feature Selection**: Analyze relationships between features and the target variable.
-5. **Model Training**: Train multiple regression models such as Linear Regression, Decision Tree, Random Forest, KNN, and SVM.
-6. **Model Evaluation**: Evaluate models using metrics like Mean Squared Error (MSE), R² score, and Mean Absolute Error (MAE).
-7. **Model Deployment**: Provide a user interface for inputting feature values and generating predictions with the best model.
+5. **Missing Value Analysis**: Analyze and treat if there are any missing values.
+6. **Model Training**: Train multiple regression models such as Linear Regression, Decision Tree, Random Forest, KNN, and SVM.
+7. **Model Evaluation**: Evaluate models using metrics like Mean Squared Error (MSE), R² score, and Mean Absolute Error (MAE).
+8. **Model Deployment**: Provide a user interface for inputting feature values and generating predictions with the best model.
 
 ## Installation
 To run this project locally, follow these steps:
@@ -55,7 +55,7 @@ To run this project locally, follow these steps:
 
 3. Run the Streamlit app:
    ```bash
-   streamlit run app.py
+   streamlit run StarbucksPredictor.py
 
 4. Upload the stock data CSV file when prompted in the app interface.
 
@@ -68,7 +68,7 @@ After starting the Streamlit app, you can:
 - Use the best model to predict the closing stock price based on user inputs.
 
 **Example:**
-1. Input values for open, high, low, and volume.
+1. Input values for open, high and low.
 2. Click Predict to get the estimated closing stock price.
 3. View visualizations of input features alongside the predicted output.
 
