@@ -638,6 +638,10 @@ if uploaded_file is not None:
 
         # Step 15: Model Deployment - Load the Saved Model and Predict
         st.write("## Step 15: Model Deployment - Predict Using Saved Model")
+        st.write("""
+                In this step, we load the trained and saved model to make predictions based on user inputs.
+                The user can input values for each feature, and the model will predict the corresponding `close` value for Starbucks stock.
+                """)
 
         # Load the saved model
         model_filename = "best_model.pkl"
