@@ -638,10 +638,6 @@ if uploaded_file is not None:
 
         # Step 15: Model Deployment - Load the Saved Model and Predict
         st.write("## Step 15: Model Deployment - Predict Using Saved Model")
-        st.write("""
-        In this step, we load the trained and saved model to make predictions based on user inputs.
-        The user can input values for each feature, and the model will predict the corresponding `close` value for Starbucks stock.
-        """)
 
         # Load the saved model
         model_filename = "best_model.pkl"
@@ -650,73 +646,41 @@ if uploaded_file is not None:
             loaded_model = joblib.load(model_filename)
             st.write(f"Model `{model_filename}` loaded successfully!")
 
-            # Allow user to input values for the features
-            st.write("### Provide the input values for prediction")
-            # Generate input fields dynamically based on the selected features
-            user_input_values = {}
-            for feature in final_features:  # Ensure `final_features` from Step 10 is available
-                user_input_values[feature] = st.number_input(
-                    f"Enter value for {feature}",
-                    value=float(DataForML[feature].mean())  # Default to the mean value of the feature
-                )
+            # Use a form to control the input process and prediction
+            with st.form("prediction_form"):
+                st.write("### Provide the input values for prediction")
+                # Generate input fields dynamically based on the selected features
+                user_input_values = {}
+                for feature in final_features:  # Ensure `final_features` from Step 10 is available
+                    user_input_values[feature] = st.number_input(
+                        f"Enter value for {feature}",
+                        value=float(DataForML[feature].mean())  # Default to the mean value of the feature
+                    )
 
-            # Add a Predict button to make predictions
-            if st.button("Predict"):
+                # Add a submit button to make predictions
+                submit_button = st.form_submit_button(label="Predict")
+
+            # If the submit button is clicked, proceed with the prediction
+            if submit_button:
                 # Convert the user inputs into a DataFrame
                 user_input_df = pd.DataFrame([user_input_values])
 
                 # Check if standardization was applied earlier
                 if standardize_data:
                     st.write("Standardization was applied earlier, scaling the input values before prediction.")
-                    # Scale the user inputs using the same scaler
+                    # Scale the user inputs using the previously used scaler
                     user_input_scaled = scaler.transform(user_input_df)
                 else:
-                    st.write("Standardization was not applied earlier, using raw input values for prediction.")
-                    user_input_scaled = user_input_df.values  # Use raw values if no scaling was applied
+                    user_input_scaled = user_input_df
 
                 # Make predictions using the loaded model
                 predicted_value = loaded_model.predict(user_input_scaled)
 
                 # Display the predicted value
-                st.write(f"### Predicted `close` price: **${predicted_value[0]:.2f}**")
-
-                # Visualizing the Prediction with Input Features
-                st.write("## Visualizing Prediction and Feature Values")
-                # Create a bar plot for input features and the predicted value
-                fig, ax = plt.subplots()
-                # Plot the input feature values
-                feature_names = list(user_input_values.keys())
-                feature_values = list(user_input_values.values())
-                ax.bar(feature_names, feature_values, color='lightblue', label='Feature Values')
-                # Add the predicted value as a separate bar
-                ax.bar(['Predicted close'], [predicted_value[0]], color='orange', label='Predicted Value')
-                ax.set_xlabel("Feature")
-                ax.set_ylabel("Value")
-                ax.set_title(f"Input Features and Predicted `close`")
-                ax.legend()
-                st.pyplot(fig)
-
-                # Create a line chart for input features and the predicted value
-                fig, ax = plt.subplots(figsize=(10, 6))
-                copy_feature_names = feature_names.copy()
-                copy_feature_values = feature_values.copy()
-                # Add the predicted value at the end
-                copy_feature_names.append('Predicted close')
-                copy_feature_values.append(predicted_value[0])
-                ax.plot(copy_feature_names, copy_feature_values, marker='o', linestyle='-', color='blue',
-                        label='Feature and Predicted Values')
-                ax.set_xlabel("Features and Prediction")
-                ax.set_ylabel("Values")
-                ax.set_title(f"Input Features and Predicted `close`")
-                ax.grid(True)
-                # Add data labels to the line chart
-                for i, txt in enumerate(copy_feature_values):
-                    ax.annotate(f'{txt:.2f}', (copy_feature_names[i], copy_feature_values[i]),
-                                textcoords="offset points", xytext=(0, 10), ha='center')
-                st.pyplot(fig)
+                st.write(f"### Predicted close: {predicted_value[0]:.2f}")
 
         except FileNotFoundError:
-            st.error(f"Model `{model_filename}` not found. Please ensure the model has been saved correctly.")
+            st.write(f"Model `{model_filename}` not found. Please ensure the model has been saved correctly.")
 
     else:
         st.error("Please upload a valid CSV file.")
